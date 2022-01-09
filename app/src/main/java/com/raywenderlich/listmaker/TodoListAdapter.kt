@@ -9,10 +9,34 @@ Extend the RecyclerView Adapter. It needs a type of ViewHolder. For this you're 
 To-Do List ViewHolder.
  */
 
-class TodoListAdapter : RecyclerView.Adapter<TodoListViewHolder>() {
+//class TodoListAdapter : RecyclerView.Adapter<TodoListViewHolder>() {
+
+class TodoListAdapter(val lists: ArrayList<TaskList>) : RecyclerView.Adapter<TodoListViewHolder>() {
+
 
     //create an instance variable to contain your todo lists.
-    private val todoLists = arrayOf("Android Development","House Work", "Errands", "Shopping")
+
+//    private val todoLists = arrayOf("Android Development","House Work", "Errands", "Shopping")
+
+  //  private var todoLists = mutableListOf("Android Development","House Work", "Errands", "Shopping")
+
+    /*fun addNewItem(){
+        todoLists.add("Todo List "+ (todoLists.size + 1))
+        //This just simply tells the recycler view to reload all the data
+        notifyDataSetChanged()
+    }*/
+
+    /*fun addNewItem(listName : String = ""){
+        //In order for it to work, currently, you can set a default value "".
+        //This will take in a string and if there's no string provided, it will add in an empty string.
+        if(listName.isEmpty()){
+            //This is your default behaviour, it's just gonna add in Todo List with the number after it.
+            todoLists.add("Todo List "+ (todoLists.size + 1))
+        }else{
+            todoLists.add(listName)
+        }
+        notifyDataSetChanged()
+    }*/
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoListViewHolder {
         /*onCreateViewHolder meant to return a new view holder. Since the recycler view recycles its own rows, this
@@ -61,7 +85,9 @@ ViewHolder's constructor.*/
         //(position + 1) The position is zero-based, so you need to add 1
 
         holder.listPositionTextView.text = (position + 1).toString()
-        holder.listTitleTextView.text = todoLists[position]
+       // holder.listTitleTextView.text = todoLists[position]
+
+        holder.listTitleTextView.text = lists[position].name
 
     }
 
@@ -69,7 +95,18 @@ ViewHolder's constructor.*/
         /*
         Tells the RecyclerView, how many items are in your list.
          */
-        return todoLists.size
+      //  return todoLists.size
+        return lists.size
+    }
+
+    fun addList(list: TaskList) {
+        lists.add(list)
+
+        /*Now, you can simply reload the data or you can let the recycler view know
+        that an item has been inserted. You simply pass in the position of the insert.
+        In your case, it's the last item in the list.*/
+
+        notifyItemInserted(lists.size-1)
     }
 
 }
