@@ -1,5 +1,6 @@
 package com.raywenderlich.listmaker
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.view.Menu
@@ -35,7 +36,7 @@ ViewHolder and ask the adapter to configure it. This could be a fresh new ViewHo
 been used, it doesn't matter. It's just the adapter's job to update this ViewHolder.
 
  */
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), TodoListAdapter.TodoListClickListener {
 
     /*
     you'll be accessing your RecyclerView from your activity, so you'll need to add a property
@@ -48,7 +49,12 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var todoListRecyclerView : RecyclerView
 
-    val listDataManager : ListDataManager = ListDataManager(this)
+    private val listDataManager : ListDataManager = ListDataManager(this)
+
+    companion object{
+        const val INTENT_LIST_KEY = "list"
+        const val LIST_DETAIL_REQUEST_CODE = 123
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +73,7 @@ class MainActivity : AppCompatActivity() {
         //you need to assign your adapter to your RecyclerView
         //todoListRecyclerView.adapter = TodoListAdapter()
 
-        todoListRecyclerView.adapter = TodoListAdapter(lists)
+        todoListRecyclerView.adapter = TodoListAdapter(lists, this)
 
         fab.setOnClickListener { _ ->
             //you now add a new to-do list item
@@ -91,6 +97,36 @@ class MainActivity : AppCompatActivity() {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
+    }
+
+    /*
+    This method is going to be called for every activity that is launched that
+    will return a result.
+    So, if your activity launches, say, three activities for result, this method will
+    be called three different times
+     */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        /*you wanna make sure that you're processing the correct activity, and you do
+        that with the requestCode.*/
+        if (requestCode == LIST_DETAIL_REQUEST_CODE){
+            data?.let {
+                //create a variable to hold the list
+                //you unwrap it here
+                val list = data.getParcelableExtra<TaskList>(INTENT_LIST_KEY)!!
+                //save it
+                listDataManager.saveList(list)
+                //This will update the actual recycler view
+                updateLists()
+            }
+        }
+    }
+
+    private fun updateLists() {
+        val lists = listDataManager.readLists()
+        //create new adapter using these lists
+        //This is just another way of refreshing your recycler view
+        todoListRecyclerView.adapter = TodoListAdapter(lists, this)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -159,10 +195,36 @@ class MainActivity : AppCompatActivity() {
             //and once they tap this, you wanna dismiss the dialog
                 dialog.dismiss()
 
+            //brought to the new activity
+            showTaskListItems(list)
+
         }
 
         //create and show the dialog
         myDialog.create().show()
+    }
 
+    //This will open your new activity, passing a TaskList object to it.
+    private fun showTaskListItems(list : TaskList){
+        val taskListItem = Intent(this, DetailActivity::class.java)
+
+        /*TaskList isn't supported by putExtra. Parsable type is an interface that you can
+        implement in your objects.*/
+        /*
+        If you are working with an object, you need to break your object into pieces, pass those
+        pieces into an intent, and then recreate that object on the other side. There's an interface
+        you can implement that streamlines this process, it's called the parcelable interface.
+         */
+        /*taskListItem.putExtra(INTENT_LIST_KEY, list) -- error, because list is not implementing the
+        parcelable interface.*/
+        taskListItem.putExtra(INTENT_LIST_KEY, list)
+        //startActivity(taskListItem)
+        startActivityForResult(taskListItem, LIST_DETAIL_REQUEST_CODE)
+    }
+
+    override fun listItemClicked(list: TaskList) {
+        showTaskListItems(list)
+        /*now you're able to send the list to your new DetailActivity. The next thing you need to do
+        is have your DetailActivity read the list.*/
     }
 }

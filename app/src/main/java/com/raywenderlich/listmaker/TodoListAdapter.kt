@@ -11,8 +11,13 @@ To-Do List ViewHolder.
 
 //class TodoListAdapter : RecyclerView.Adapter<TodoListViewHolder>() {
 
-class TodoListAdapter(val lists: ArrayList<TaskList>) : RecyclerView.Adapter<TodoListViewHolder>() {
+class TodoListAdapter(private val lists: ArrayList<TaskList>, val clickListener : TodoListClickListener) : RecyclerView.Adapter<TodoListViewHolder>() {
 
+    interface TodoListClickListener{
+        fun listItemClicked(list: TaskList)
+        /*now that you have your interface defined, you now need to create a listener, and you
+        can do that in the constructor above (TodoListAdapter( , val clickListener:TodoListClickListener))*/
+    }
 
     //create an instance variable to contain your todo lists.
 
@@ -88,6 +93,13 @@ ViewHolder's constructor.*/
        // holder.listTitleTextView.text = todoLists[position]
 
         holder.listTitleTextView.text = lists[position].name
+
+        //to add an onClickListener to the view
+        holder.itemView.setOnClickListener {
+            clickListener.listItemClicked(lists[position])
+        }
+        /*Head on back to MainActivity, you want to state that MainActivity class conforms to that clickListener.
+        * */
 
     }
 
