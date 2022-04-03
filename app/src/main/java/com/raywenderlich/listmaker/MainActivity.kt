@@ -36,20 +36,24 @@ ViewHolder and ask the adapter to configure it. This could be a fresh new ViewHo
 been used, it doesn't matter. It's just the adapter's job to update this ViewHolder.
 
  */
-class MainActivity : AppCompatActivity(), TodoListAdapter.TodoListClickListener {
+//class MainActivity : AppCompatActivity(), TodoListAdapter.TodoListClickListener {
+class MainActivity : AppCompatActivity(), TodoListFragment.OnFragmentInteractionListener {
 
-    /*
-    you'll be accessing your RecyclerView from your activity, so you'll need to add a property
-    lateinit keyword just indicates that a RecyclerView is going to be created sometime in the
-    future as opposed to when the activity is created.
 
-    If you don't add the lateinit keyword, you would need to initialize the value right away, which
-    is a problem, since your activity takes a little time to be generated.
-     */
+        /*
+        you'll be accessing your RecyclerView from your activity, so you'll need to add a property
+        lateinit keyword just indicates that a RecyclerView is going to be created sometime in the
+        future as opposed to when the activity is created.
 
-    private lateinit var todoListRecyclerView : RecyclerView
+        If you don't add the lateinit keyword, you would need to initialize the value right away, which
+        is a problem, since your activity takes a little time to be generated.
+         */
 
-    private val listDataManager : ListDataManager = ListDataManager(this)
+//    private lateinit var todoListRecyclerView : RecyclerView
+//
+//    private val listDataManager : ListDataManager = ListDataManager(this)
+
+    private var todoListFragment = TodoListFragment.newInstance()
 
     companion object{
         const val INTENT_LIST_KEY = "list"
@@ -61,7 +65,7 @@ class MainActivity : AppCompatActivity(), TodoListAdapter.TodoListClickListener 
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        //Before you create your recycler view, add the following
+       /* //Before you create your recycler view, add the following
         val lists = listDataManager.readLists()
 
         //get a reference to your RecyclerView
@@ -73,7 +77,7 @@ class MainActivity : AppCompatActivity(), TodoListAdapter.TodoListClickListener 
         //you need to assign your adapter to your RecyclerView
         //todoListRecyclerView.adapter = TodoListAdapter()
 
-        todoListRecyclerView.adapter = TodoListAdapter(lists, this)
+        todoListRecyclerView.adapter = TodoListAdapter(lists, this)*/
 
         fab.setOnClickListener { _ ->
             //you now add a new to-do list item
@@ -91,6 +95,13 @@ class MainActivity : AppCompatActivity(), TodoListAdapter.TodoListClickListener 
             Since you don't wanna use the view, provide an _
             fab.setOnClickListener { _ -> */
         }
+
+        //add your fragment onto the screen
+        /*supportFragmentManager.beginTransaction()
+            .add(R.id.fragment_container, todoListFragment)
+            .commit()*/
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -115,18 +126,14 @@ class MainActivity : AppCompatActivity(), TodoListAdapter.TodoListClickListener 
                 //you unwrap it here
                 val list = data.getParcelableExtra<TaskList>(INTENT_LIST_KEY)!!
                 //save it
-                listDataManager.saveList(list)
+                //listDataManager.saveList(list)
+
+                todoListFragment.saveList(list)
+
                 //This will update the actual recycler view
-                updateLists()
+                //updateLists()
             }
         }
-    }
-
-    private fun updateLists() {
-        val lists = listDataManager.readLists()
-        //create new adapter using these lists
-        //This is just another way of refreshing your recycler view
-        todoListRecyclerView.adapter = TodoListAdapter(lists, this)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -179,18 +186,22 @@ class MainActivity : AppCompatActivity(), TodoListAdapter.TodoListClickListener 
             /*create variable for your adapter. You can get this from your recycler view. The recycler view has an adapter
             property, and like before, you have to cast it.*/
 
-            val adapter = todoListRecyclerView.adapter as TodoListAdapter
+          //  val adapter = todoListRecyclerView.adapter as TodoListAdapter
 
             //First you need to create an empty task list passing in the edit text as title
             val list = TaskList(todoTitleEditText.text.toString())
 
             //saving it
-            listDataManager.saveList(list)
+            //listDataManager.saveList(list)
 
             //now you need to update your recycler view with the list.
-            adapter.addList(list)
+            //adapter.addList(list)
 
           //  adapter.addNewItem(todoTitleEditText.text.toString())
+
+            /*delegate all of the managing of the RecyclerView and saving the data
+            to your fragment*/
+            todoListFragment.addlist(list)
 
             //and once they tap this, you wanna dismiss the dialog
                 dialog.dismiss()
@@ -222,7 +233,13 @@ class MainActivity : AppCompatActivity(), TodoListAdapter.TodoListClickListener 
         startActivityForResult(taskListItem, LIST_DETAIL_REQUEST_CODE)
     }
 
-    override fun listItemClicked(list: TaskList) {
+    /*override fun listItemClicked(list: TaskList) {
+        showTaskListItems(list)
+        *//*now you're able to send the list to your new DetailActivity. The next thing you need to do
+        is have your DetailActivity read the list.*//*
+    }*/
+
+    override fun onTodoListClicked(list: TaskList) {
         showTaskListItems(list)
         /*now you're able to send the list to your new DetailActivity. The next thing you need to do
         is have your DetailActivity read the list.*/
