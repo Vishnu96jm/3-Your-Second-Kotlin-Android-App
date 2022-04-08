@@ -1,10 +1,46 @@
 package com.raywenderlich.listmaker
 
+import android.app.Application
 import android.content.Context
+import androidx.lifecycle.AndroidViewModel
 //import android.preference.PreferenceManager
 import androidx.preference.PreferenceManager
 
-class ListDataManager(private val context: Context) {
+/*In computer science, the data driving your app is known as the Model. The Model just doesn't have to be shared prefs, it's
+whatever holds the backing data.
+For example, if you are reading and writing to a remote service, then that remote service is the model.
+If you are just storing your data in classes, those objects represent your model.
+
+The view is the visual elements
+on the screen. Typically you want your model data to appear on the view.
+In a profile screen, you may want to show the username which is contained in a user model object.
+
+The Viewmodel is an object that lives between the two objects. It has as special job, it talks to the view and the model.
+
+In your case, you want to show task lists, so instead of your fragments asking the data manager represented by a plain
+old class, the fragments will ask the list data manager represented by a viewmodel.
+
+One of the benefits about working with a viewmodel is that they persist through configuration changes. You don't need to
+save your model state and restore it every time a user rotates their phone. The viewmodel manages that for you. Viewmodels
+also exist in just one activity. If you go to another activity, you end up with another viewmodel, but you've just refactored your
+app to use a single activity, so that's no longer an issue.
+
+Android provides two types of viewmodels
+1. A regular ViewModel - use for regular data references
+2. AndroidViewModel - Use if you need to hold a reference to an application context
+
+Since you need the context for shared prefs, you'll use an Android ViewModel in this demo.
+
+Convert ListDataManager to use a ViewModel*/
+
+ /*AndroidViewModel(application) - this is required so that you can keep a reference
+ * to the context inside of your ViewModel.*/
+class ListDataManager(application : Application) : AndroidViewModel(application) {
+
+//     Now for this to work, you need a property for your context.
+     private val context = application.applicationContext
+
+
     /*To get started, you'll write the saving method. This will be stored in a
     method called saveList*/
 
@@ -30,7 +66,7 @@ class ListDataManager(private val context: Context) {
         list to a set.
          */
 
-        sharedPrefs.putStringSet(list.name+" Hi", list.tasks.toHashSet())
+        sharedPrefs.putStringSet(list.name, list.tasks.toHashSet())
         sharedPrefs.apply()
     }
 

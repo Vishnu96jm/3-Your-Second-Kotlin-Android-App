@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/todoListFragment">
+    <fragment
+        android:id="@+id/todoListFragment"
+        android:name="com.raywenderlich.listmaker.TodoListFragment"
+        android:label="TodoListFragment" >
+        <action
+            android:id="@+id/action_todoListFragment_to_taskDetailFragment"
+            app:destination="@id/taskDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/taskDetailFragment"
+        android:name="com.raywenderlich.listmaker.TaskDetailFragment"
+        android:label="TaskDetailFragment" >
+        <argument
+            android:name="list_string"
+            app:argType="string" />
+    </fragment>
+</navigation>
+
+<!--In place of a FragmentManager calls, you can create your app flow using a navigation graph. A navigation graph provides
+a visual layout for your app. The layout works by providing destinations inside of your app. Each destination is a fragment, and the arrows that connect them together are known as actions. Instead of providing a layout where you change fragments,
+you provide a NavHostFragment. It's basically this container where all your fragmens will appear. Once you have them in place, it's just a matter of calling the action in code to transition to a new destination.
+-->

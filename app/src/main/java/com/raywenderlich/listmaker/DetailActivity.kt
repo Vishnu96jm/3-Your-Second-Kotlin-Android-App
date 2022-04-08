@@ -65,28 +65,28 @@ press the back button you pop the activity off the stack.
 //you want to write some code to launch your new intent.
 class DetailActivity : AppCompatActivity() {
 
-    lateinit var list: TaskList
-    lateinit var taskListRecyclerView: RecyclerView
-    lateinit var addTaskButton : FloatingActionButton
+  //  lateinit var list: TaskList
+//    lateinit var taskListRecyclerView: RecyclerView
+//    lateinit var addTaskButton : FloatingActionButton
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    /*override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
         list = intent.getParcelableExtra(MainActivity.INTENT_LIST_KEY) as TaskList
         title = list.name
 
-        taskListRecyclerView = findViewById(R.id.task_list_recyclerview)
+        *//*taskListRecyclerView = findViewById(R.id.task_list_recyclerview)
         taskListRecyclerView.layoutManager = LinearLayoutManager(this)
         taskListRecyclerView.adapter = TaskListAdapter(list)
 
         addTaskButton = findViewById(R.id.add_task_button)
         addTaskButton.setOnClickListener {
             showCreateTaskDialog()
-        }
-    }
+        }*//*
+    }*/
 
     //you'll send the results in onBackPressed()
-    override fun onBackPressed() {
+    /*override fun onBackPressed() {
         //create a bundle to store things
         val bundle = Bundle()
         bundle.putParcelable(MainActivity.INTENT_LIST_KEY, list)
@@ -98,17 +98,17 @@ class DetailActivity : AppCompatActivity() {
 
         //now the super is gonna go last for this method
         super.onBackPressed()
-    }
+    }*/
 
-    private fun showCreateTaskDialog() {
+    /*private fun showCreateTaskDialog() {
         val taskEditText = EditText(this)
         taskEditText.inputType = InputType.TYPE_CLASS_TEXT
         AlertDialog.Builder(this)
             .setTitle(R.string.task_to_add)
             .setView(taskEditText)
             .setPositiveButton(R.string.add_task){
-                 /*_> : button that was pressed. but you don't need that, so just put that
-                as an underscore*/
+                 *//*_> : button that was pressed. but you don't need that, so just put that
+                as an underscore*//*
                 dialog, _ ->
                     val task = taskEditText.text.toString()
                     list.tasks.add(task)
@@ -117,5 +117,5 @@ class DetailActivity : AppCompatActivity() {
             }
             .create()
             .show()
-    }
+    }*/
 }

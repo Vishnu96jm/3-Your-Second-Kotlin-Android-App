@@ -8,9 +8,11 @@ import android.view.MenuItem
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 /*
 RecyclerView:
@@ -37,7 +39,7 @@ been used, it doesn't matter. It's just the adapter's job to update this ViewHol
 
  */
 //class MainActivity : AppCompatActivity(), TodoListAdapter.TodoListClickListener {
-class MainActivity : AppCompatActivity(), TodoListFragment.OnFragmentInteractionListener {
+class MainActivity : AppCompatActivity() {
 
 
         /*
@@ -53,17 +55,18 @@ class MainActivity : AppCompatActivity(), TodoListFragment.OnFragmentInteraction
 //
 //    private val listDataManager : ListDataManager = ListDataManager(this)
 
-    private var todoListFragment = TodoListFragment.newInstance()
+   // private var todoListFragment = TodoListFragment.newInstance()
 
-    companion object{
+    /*companion object{
         const val INTENT_LIST_KEY = "list"
         const val LIST_DETAIL_REQUEST_CODE = 123
-    }
+    }*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+        Navigation.findNavController(this, R.id.nav_host_fragment)
 
        /* //Before you create your recycler view, add the following
         val lists = listDataManager.readLists()
@@ -79,22 +82,22 @@ class MainActivity : AppCompatActivity(), TodoListFragment.OnFragmentInteraction
 
         todoListRecyclerView.adapter = TodoListAdapter(lists, this)*/
 
-        fab.setOnClickListener { _ ->
+        /*fab.setOnClickListener { _ ->
             //you now add a new to-do list item
             //The first thing you need to do is get your adapter
 
            // val adapter = todoListRecyclerView.adapter (todoListRecyclerView.adapter - just a regular recycler view adapter)
 
             // you need to do a cast to access your own to-do list adapter
-            /*val adapter = todoListRecyclerView.adapter as TodoListAdapter
-            adapter.addNewItem()*/
+            *//*val adapter = todoListRecyclerView.adapter as TodoListAdapter
+            adapter.addNewItem()*//*
 
             showCreateTodoListDialog()
 
-            /*fab.setOnClickListener { view ->
+            *//*fab.setOnClickListener { view ->
             Since you don't wanna use the view, provide an _
-            fab.setOnClickListener { _ -> */
-        }
+            fab.setOnClickListener { _ -> *//*
+        }*/
 
         //add your fragment onto the screen
         /*supportFragmentManager.beginTransaction()
@@ -104,11 +107,16 @@ class MainActivity : AppCompatActivity(), TodoListFragment.OnFragmentInteraction
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    override fun onBackPressed() {
+        super.onBackPressed()
+        toolbar.title = getString(R.string.Listmaker)
+    }
+
+    /*override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
-    }
+    }*/
 
     /*
     This method is going to be called for every activity that is launched that
@@ -116,10 +124,10 @@ class MainActivity : AppCompatActivity(), TodoListFragment.OnFragmentInteraction
     So, if your activity launches, say, three activities for result, this method will
     be called three different times
      */
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        /*you wanna make sure that you're processing the correct activity, and you do
-        that with the requestCode.*/
+        *//*you wanna make sure that you're processing the correct activity, and you do
+        that with the requestCode.*//*
         if (requestCode == LIST_DETAIL_REQUEST_CODE){
             data?.let {
                 //create a variable to hold the list
@@ -134,9 +142,9 @@ class MainActivity : AppCompatActivity(), TodoListFragment.OnFragmentInteraction
                 //updateLists()
             }
         }
-    }
+    }*/
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    /*override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -144,7 +152,7 @@ class MainActivity : AppCompatActivity(), TodoListFragment.OnFragmentInteraction
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
-    }
+    }*/
 
     /*
     Android provides a dialog class with three implementations: An alert dialog,
@@ -156,7 +164,7 @@ class MainActivity : AppCompatActivity(), TodoListFragment.OnFragmentInteraction
     To get started you'll create a dialog to ask the user to name their to-do list.
      */
 
-    private fun showCreateTodoListDialog(){
+    /*private fun showCreateTodoListDialog(){
         //create some variables to hold some strings
         val dialogTitle = getString(R.string.name_of_list)
         val positiveButtonTitle = getString(R.string.create_list)
@@ -175,16 +183,16 @@ class MainActivity : AppCompatActivity(), TodoListFragment.OnFragmentInteraction
         myDialog.setView(todoTitleEditText)
 
         myDialog.setPositiveButton(positiveButtonTitle) {
-            /*you're going to pass in a listener. This listener takes a dialog and this is the dialog that you're using and an
+            *//*you're going to pass in a listener. This listener takes a dialog and this is the dialog that you're using and an
             int, letting you know which button was tapped. You don't need to know which button was tapped was tapped in this
-            method, so you can just use an underscore*/
+            method, so you can just use an underscore*//*
             dialog, _ ->
-            /*
+            *//*
             get the text from the edit text, and then add it to the list. To do this, you need to access to your adapter
             and you do it in the set positive button closure.
-             */
-            /*create variable for your adapter. You can get this from your recycler view. The recycler view has an adapter
-            property, and like before, you have to cast it.*/
+             *//*
+            *//*create variable for your adapter. You can get this from your recycler view. The recycler view has an adapter
+            property, and like before, you have to cast it.*//*
 
           //  val adapter = todoListRecyclerView.adapter as TodoListAdapter
 
@@ -199,8 +207,8 @@ class MainActivity : AppCompatActivity(), TodoListFragment.OnFragmentInteraction
 
           //  adapter.addNewItem(todoTitleEditText.text.toString())
 
-            /*delegate all of the managing of the RecyclerView and saving the data
-            to your fragment*/
+            *//*delegate all of the managing of the RecyclerView and saving the data
+            to your fragment*//*
             todoListFragment.addlist(list)
 
             //and once they tap this, you wanna dismiss the dialog
@@ -213,25 +221,25 @@ class MainActivity : AppCompatActivity(), TodoListFragment.OnFragmentInteraction
 
         //create and show the dialog
         myDialog.create().show()
-    }
+    }*/
 
     //This will open your new activity, passing a TaskList object to it.
-    private fun showTaskListItems(list : TaskList){
+    /*private fun showTaskListItems(list : TaskList){
         val taskListItem = Intent(this, DetailActivity::class.java)
 
-        /*TaskList isn't supported by putExtra. Parsable type is an interface that you can
-        implement in your objects.*/
-        /*
+        *//*TaskList isn't supported by putExtra. Parsable type is an interface that you can
+        implement in your objects.*//*
+        *//*
         If you are working with an object, you need to break your object into pieces, pass those
         pieces into an intent, and then recreate that object on the other side. There's an interface
         you can implement that streamlines this process, it's called the parcelable interface.
-         */
-        /*taskListItem.putExtra(INTENT_LIST_KEY, list) -- error, because list is not implementing the
-        parcelable interface.*/
+         *//*
+        *//*taskListItem.putExtra(INTENT_LIST_KEY, list) -- error, because list is not implementing the
+        parcelable interface.*//*
         taskListItem.putExtra(INTENT_LIST_KEY, list)
         //startActivity(taskListItem)
         startActivityForResult(taskListItem, LIST_DETAIL_REQUEST_CODE)
-    }
+    }*/
 
     /*override fun listItemClicked(list: TaskList) {
         showTaskListItems(list)
@@ -239,9 +247,9 @@ class MainActivity : AppCompatActivity(), TodoListFragment.OnFragmentInteraction
         is have your DetailActivity read the list.*//*
     }*/
 
-    override fun onTodoListClicked(list: TaskList) {
+    /*override fun onTodoListClicked(list: TaskList) {
         showTaskListItems(list)
-        /*now you're able to send the list to your new DetailActivity. The next thing you need to do
-        is have your DetailActivity read the list.*/
-    }
+        *//*now you're able to send the list to your new DetailActivity. The next thing you need to do
+        is have your DetailActivity read the list.*//*
+    }*/
 }
